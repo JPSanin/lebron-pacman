@@ -9,6 +9,8 @@ import processing.core.PImage;
 public class Main extends PApplet{
 	private PImage[] homescreens;
 	private PImage[] namescreens;
+	private PImage bigBall;
+	private PImage littleBall;
 	private PImage mapScreen; 
 	private PFont scoreBoard;
 	private int[][] map;
@@ -37,17 +39,17 @@ public class Main extends PApplet{
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-			{1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
-			{1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-			{1, 0, 1, 0, 1, 0, 0, 0, 3, 3, 3, 0, 1, 0, 1, 1, 0, 1, 0, 1},
-			{1, 0, 1, 0, 1, 0, 1, 0, 3, 3, 3, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-			{0, 0, 1, 0, 1, 0, 1, 0, 3, 3, 3, 0, 1, 1, 1, 1, 0, 1, 0, 0},
-			{1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-			{1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
-			{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-			{1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-			{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+			{1, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 1},
+			{1, 4, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
+			{1, 4, 1, 4, 1, 4, 5, 4, 3, 3, 3, 4, 1, 4, 1, 1, 4, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 4, 3, 3, 3, 4, 1, 5, 4, 4, 4, 1, 4, 1},
+			{0, 4, 1, 5, 1, 4, 1, 4, 3, 3, 3, 4, 1, 1, 1, 1, 4, 1, 4, 0},
+			{1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 4, 4, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 4, 1},
+			{1, 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 5, 1, 4, 1},
+			{1, 4, 1, 1, 1, 1, 4, 5, 4, 1, 1, 4, 4, 4, 1, 1, 1, 1, 4, 1},
+			{1, 5, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 5, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		};
 		squareSize=40;
@@ -64,12 +66,14 @@ public class Main extends PApplet{
 		namescreens[2]=loadImage("images/NameScreenError.png");
 		mapScreen=loadImage("images/Map.png");
 		scoreBoard= createFont("fonts/60s Scoreboard.ttf", 32);
+		bigBall=loadImage("images/bigBall.png");
+		littleBall=loadImage("images/littleBall.png");
 		
 		name="";
 		playerNumber=0;
 		players= new ArrayList<Player>();
 		lbj= new Lebron(this, 40, 120);
-		screen=0;
+		screen=2;
 	}
 
 	public void draw() {
@@ -110,16 +114,16 @@ public class Main extends PApplet{
 
 		case 4:
 				int realTime=gameTime-holdTime;
-				players.get(playerNumber).calculateTime(realTime);
+				players.get(playerNumber-1).calculateTime(realTime);
 				image(mapScreen,0,0,800,600);
-				//paintMatrix();
+				paintMatrix();
 				lbj.draw();
 				fill(225,0,0);
 				textFont(scoreBoard);
 				textSize(32);
-				text(players.get(playerNumber).getTime(),460,55);
-				text( players.get(playerNumber).getScore(),700, 55);
-				System.out.println(realTime);
+				text(players.get(playerNumber-1).getTime(),460,55);
+				text( players.get(playerNumber-1).getScore(),700, 55);
+				//System.out.println(realTime);
 			
 
 			break;
@@ -152,6 +156,7 @@ public class Main extends PApplet{
 				screen=3;
 			}else if (mouseX > 275 && mouseX < 525 && mouseY > 350 && mouseY < 410) {
 				players.add(new Player(name));
+				playerNumber++;
 				holdTime=gameTime;
 				screen=4;
 			}
@@ -184,25 +189,36 @@ public class Main extends PApplet{
 		for (int columns = 0; columns < 20; columns++) {
 			for (int rows = 0; rows < 15; rows++) {
 				if(map[rows][columns] == 0) {
-					noFill();
-					stroke(255);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+					/*noFill();
+					stroke(0);
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	*/
 				}
 				if(map[rows][columns] == 1) {
-					fill(0);
+					/*fill(0);
 					stroke(255);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/	
 				}
 				if(map[rows][columns] == 2) {
-					fill(0);
+					/*fill(0);
 					noStroke();
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	*/
 				}  
 				if(map[rows][columns] == 3) {
-					fill(0,255,0);
+					/*fill(0,255,0);
 					stroke(255);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	*/
 				}  
+				if(map[rows][columns] == 4) {
+					fill(0,0,255);
+					stroke(255);
+					image(littleBall,0+ (columns * squareSize),0 + (rows * squareSize),squareSize,squareSize);
+				}
+				if(map[rows][columns] == 5) {
+					fill(0,0,255);
+					stroke(255);
+					
+					image(bigBall,0+ (columns * squareSize),0 + (rows * squareSize),squareSize,squareSize);	
+				}
 			}
 	}
 	}
@@ -221,7 +237,15 @@ public class Main extends PApplet{
 	public void moveUp() {
 		if (key == CODED) {
 			if (keyCode == UP) {
-				if (lbj.getMatY() - 1 > -1 && map[lbj.getMatY() - 1][lbj.getMatX()] == 0) {
+				if (lbj.getMatY() - 1 > -1 && map[lbj.getMatY() - 1][lbj.getMatX()] == 4) {
+					lbj.move(1);
+					map[lbj.getMatY()][lbj.getMatX()]=0;
+					players.get(playerNumber-1).increaseScore(10);
+				}else if(lbj.getMatY() - 1 > -1 && map[lbj.getMatY() - 1][lbj.getMatX()] == 5) {
+					lbj.move(1);
+					map[lbj.getMatY()][lbj.getMatX()]=0;
+					players.get(playerNumber-1).increaseScore(50);
+				}else if(lbj.getMatY() - 1 > -1 && map[lbj.getMatY() - 1][lbj.getMatX()] == 0) {
 					lbj.move(1);
 				}
 			}
@@ -230,7 +254,15 @@ public class Main extends PApplet{
 	public void moveDown() {
 		if (key == CODED) {
 			if (keyCode == DOWN) {
-				if (lbj.getMatY() + 1 < 15 && map[lbj.getMatY() + 1][lbj.getMatX()] == 0) {
+				if (lbj.getMatY() + 1 < 15 && map[lbj.getMatY() + 1][lbj.getMatX()] == 4) {
+					lbj.move(2);
+					map[lbj.getMatY()][lbj.getMatX()]=0;
+					players.get(playerNumber-1).increaseScore(10);
+				}else if(lbj.getMatY() + 1 < 15 && map[lbj.getMatY() + 1][lbj.getMatX()] == 5) {
+					lbj.move(2);
+					map[lbj.getMatY()][lbj.getMatX()]=0;
+					players.get(playerNumber-1).increaseScore(50);
+				}else if (lbj.getMatY() + 1 < 15 && map[lbj.getMatY() + 1][lbj.getMatX()] == 0) {
 					lbj.move(2);
 				}
 			}
@@ -242,7 +274,15 @@ public class Main extends PApplet{
 			if(lbj.getMatX() ==0 &&  lbj.getMatY()==8) {
 				lbj.teleportLeft();
 			}else {
-				if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 0) {
+				if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 4) {
+					lbj.move(3);
+					map[lbj.getMatY()][lbj.getMatX()]=0;
+					players.get(playerNumber-1).increaseScore(10);
+				}else if(lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 5) {
+					lbj.move(3);
+					map[lbj.getMatY()][lbj.getMatX()]=0;
+					players.get(playerNumber-1).increaseScore(50);
+				}else if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 0) {
 					lbj.move(3);
 				}
 
@@ -255,7 +295,15 @@ public class Main extends PApplet{
 				if(lbj.getMatX() ==19 &&  lbj.getMatY()==8) {
 					lbj.teleportRight();
 				}else {
-				if (lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 0) {
+					if (lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 4) {
+						lbj.move(4);
+						map[lbj.getMatY()][lbj.getMatX()]=0;
+						players.get(playerNumber-1).increaseScore(10);
+					}else if(lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 5) {
+						lbj.move(4);
+						map[lbj.getMatY()][lbj.getMatX()]=0;
+						players.get(playerNumber-1).increaseScore(50);
+					}else if (lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 0) {
 					lbj.move(4);
 				}
 				}
