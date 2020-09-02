@@ -8,6 +8,7 @@ public class Main extends PApplet{
 	PImage[] namescreens;
 	int[][] map;
 	int squareSize;
+	Lebron lbj;
 	private int screen;
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
@@ -19,7 +20,7 @@ public class Main extends PApplet{
 	}
 
 	public void setup() {
-		
+		ellipseMode(CORNER);
 	    map = new int[][]{ 
 	    {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 	    {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
@@ -50,7 +51,7 @@ public class Main extends PApplet{
 		namescreens[1]=loadImage("images/NameScreenGo.png");
 		namescreens[2]=loadImage("images/NameScreenError.png");
 		
-		
+		lbj= new Lebron(this, 40, 120);
 		screen=3;
 	}
 
@@ -100,16 +101,16 @@ public class Main extends PApplet{
                 	fill(255,0,0);
                     stroke(255);
                     rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+                }  
                 }
+                lbj.draw();
                 
-                
-                }
 			}
 			
 			break;
 			
 		}
-		fill(0);
+		fill(0,255,0);
 		text("" + mouseX + "," + mouseY, mouseX, mouseY);
 	}
 
@@ -138,7 +139,34 @@ public class Main extends PApplet{
 		}
 	}
 
-
+	public void keyPressed() {
+		
+		switch(screen) {
+		case 3:
+			if (key == CODED) {
+			    if (keyCode == UP) {
+			    	
+			    	lbj.move(1);
+			    }
+			}
+			if (key == CODED) {
+			    if (keyCode == DOWN) {
+			    	lbj.move(2);
+			    }
+			}
+			if (key == CODED) {
+			    if (keyCode == LEFT) {
+			    	lbj.move(3);
+			    }
+			}
+			if (key == CODED) {
+			    if (keyCode == RIGHT) {
+			    	lbj.move(4);
+			    }
+			}
+			
+		}
+	}
 
 
 }
