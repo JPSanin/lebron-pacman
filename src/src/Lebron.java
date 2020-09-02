@@ -60,7 +60,15 @@ public class Lebron {
 			}
 		
 	}
+	public void teleportLeft() {
+		matX=19;
+		posX=760;
+	}
 	
+	public void teleportRight() {
+		matX=0;
+		posX=0;
+	}
 	private void moveUp() {
         this.posY-= this.vel*this.acceleration;
         matY-=1;
@@ -78,6 +86,22 @@ public class Lebron {
         matX+=1;
 	}
 	
+	public int getMatX() {
+		return matX;
+	}
+
+	public void setMatX(int matX) {
+		this.matX = matX;
+	}
+
+	public int getMatY() {
+		return matY;
+	}
+
+	public void setMatY(int matY) {
+		this.matY = matY;
+	}
+
 	public void loseHealth() {}
 
 	public int getPosX() {
