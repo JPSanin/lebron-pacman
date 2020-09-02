@@ -9,6 +9,7 @@ import processing.core.PImage;
 public class Main extends PApplet{
 	private PImage[] homescreens;
 	private PImage[] namescreens;
+	private PImage mapScreen; 
 	private PFont scoreBoard;
 	private int[][] map;
 	private int squareSize;
@@ -16,6 +17,9 @@ public class Main extends PApplet{
 	private int screen;
 	private String name;
 	private ArrayList<Player> players;
+	private int playerNumber;
+	private int gameTime;
+	private int holdTime;
 	
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
@@ -58,16 +62,19 @@ public class Main extends PApplet{
 		namescreens[0]=loadImage("images/NameScreen.png");
 		namescreens[1]=loadImage("images/NameScreenGo.png");
 		namescreens[2]=loadImage("images/NameScreenError.png");
+		mapScreen=loadImage("images/Map.png");
 		scoreBoard= createFont("fonts/60s Scoreboard.ttf", 32);
 		
 		name="";
+		playerNumber=0;
 		players= new ArrayList<Player>();
 		lbj= new Lebron(this, 40, 120);
-		screen=2;
+		screen=0;
 	}
 
 	public void draw() {
 		background(255);
+		gameTime=millis()/1000;
 
 		switch(screen) {
 
@@ -102,9 +109,17 @@ public class Main extends PApplet{
 			break;
 
 		case 4:
-				paintMatrix();
+				int realTime=gameTime-holdTime;
+				players.get(playerNumber).calculateTime(realTime);
+				image(mapScreen,0,0,800,600);
+				//paintMatrix();
 				lbj.draw();
-				System.out.println(players.get(0).getName());
+				fill(225,0,0);
+				textFont(scoreBoard);
+				textSize(32);
+				text(players.get(playerNumber).getTime(),460,55);
+				text( players.get(playerNumber).getScore(),700, 55);
+				System.out.println(realTime);
 			
 
 			break;
@@ -113,6 +128,7 @@ public class Main extends PApplet{
 		fill(0,255,0);
 		textSize(12);
 		text("" + mouseX + "," + mouseY, mouseX, mouseY);
+		
 	}
 
 	public void mousePressed() {
@@ -136,6 +152,7 @@ public class Main extends PApplet{
 				screen=3;
 			}else if (mouseX > 275 && mouseX < 525 && mouseY > 350 && mouseY < 410) {
 				players.add(new Player(name));
+				holdTime=gameTime;
 				screen=4;
 			}
 			break;
@@ -177,8 +194,8 @@ public class Main extends PApplet{
 					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
 				}
 				if(map[rows][columns] == 2) {
-					fill(255,0,0);
-					stroke(255);
+					fill(0);
+					noStroke();
 					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
 				}  
 				if(map[rows][columns] == 3) {

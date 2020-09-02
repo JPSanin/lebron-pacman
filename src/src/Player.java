@@ -8,11 +8,17 @@ public class Player {
 	public Player(String name) {
 		this.name=name;
 		score=0;
-		time="0:00";
+		time="";
 		
 	}
 	
-	public void calculateTime() {}
+	public void calculateTime(int time) {
+		String s="";
+		int printTime= (int)time/60;
+		int printTime2= time-printTime*60;
+		s+=printTime+":"+printTime2;
+		this.time=s;
+	}
 	public void increaseScore(int points) {
 		score+=points;
 		
