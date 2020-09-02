@@ -6,7 +6,8 @@ import processing.core.PImage;
 public class Main extends PApplet{
 	PImage[] homescreens;
 	PImage[] namescreens;
-
+	int[][] map;
+	int squareSize;
 	private int screen;
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
@@ -18,6 +19,26 @@ public class Main extends PApplet{
 	}
 
 	public void setup() {
+		
+	    map = new int[][]{ 
+	    {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+	    {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+	    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	    {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
+	    {1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	    {1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
+	    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+	    {0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0},
+	    {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+	    {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
+	    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+	    {1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+	    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+	    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	    };
+	    squareSize=40;
+	   
 		homescreens= new PImage[4];
 		homescreens[0]=loadImage("images/HomeScreen1.png");
 		homescreens[1]=loadImage("images/HomeScreenInfo.png");
@@ -30,11 +51,11 @@ public class Main extends PApplet{
 		namescreens[2]=loadImage("images/NameScreenError.png");
 		
 		
-		screen=0;
+		screen=3;
 	}
 
 	public void draw() {
-		background(0);
+		background(255);
 
 		switch(screen) {
 
@@ -50,6 +71,7 @@ public class Main extends PApplet{
 			}
 
 			break;
+			
 		case 1:
 			image(homescreens[2],0,0,800,600);
 			break;
@@ -60,6 +82,32 @@ public class Main extends PApplet{
 				image(namescreens[1],0,0,800,600);
 			}
 			break;
+			
+		case 3:
+			for (int columns = 0; columns < 20; columns++) {
+                for (int rows = 0; rows < 15; rows++) {
+                if(map[rows][columns] == 0) {
+                	noFill();
+                    stroke(255);
+                    rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+                }
+                if(map[rows][columns] == 1) {
+                	fill(0);
+                    stroke(255);
+                    rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+                }
+                if(map[rows][columns] == 2) {
+                	fill(255,0,0);
+                    stroke(255);
+                    rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	
+                }
+                
+                
+                }
+			}
+			
+			break;
+			
 		}
 		fill(0);
 		text("" + mouseX + "," + mouseY, mouseX, mouseY);
@@ -81,6 +129,11 @@ public class Main extends PApplet{
 				screen=0;
 			}
 		break;
+		case 2:
+			if (mouseX > 275 && mouseX < 525 && mouseY > 350 && mouseY < 410) {
+				screen=3;
+			}
+			break;
 
 		}
 	}
