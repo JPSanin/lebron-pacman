@@ -12,6 +12,7 @@ public class Main extends PApplet{
 	private PImage bigBall;
 	private PImage littleBall;
 	private PImage mapScreen; 
+	private PImage[] lebronImages;
 	private PFont scoreBoard;
 	private int[][] map;
 	private int squareSize;
@@ -22,6 +23,7 @@ public class Main extends PApplet{
 	private int playerNumber;
 	private int gameTime;
 	private int holdTime;
+	private int dir;
 	
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
@@ -68,11 +70,18 @@ public class Main extends PApplet{
 		scoreBoard= createFont("fonts/60s Scoreboard.ttf", 32);
 		bigBall=loadImage("images/bigBall.png");
 		littleBall=loadImage("images/littleBall.png");
+		lebronImages=new PImage[5];
+		lebronImages[0]=loadImage("images/lbj.png");
+		lebronImages[1]=loadImage("images/lbjRight.png");
+		lebronImages[2]=loadImage("images/lbjDown.png");
+		lebronImages[3]=loadImage("images/lbjUp.png");
+		lebronImages[4]=loadImage("images/lbjFrozen.png");
 		
 		name="";
 		playerNumber=0;
 		players= new ArrayList<Player>();
 		lbj= new Lebron(this, 40, 120);
+		dir=4;
 		screen=2;
 	}
 
@@ -117,7 +126,7 @@ public class Main extends PApplet{
 				players.get(playerNumber-1).calculateTime(realTime);
 				image(mapScreen,0,0,800,600);
 				paintMatrix();
-				lbj.draw();
+				lbj.draw(lebronImages[0],lebronImages[1],lebronImages[2],lebronImages[3],lebronImages[4],dir);
 				fill(225,0,0);
 				textFont(scoreBoard);
 				textSize(32);
@@ -177,10 +186,14 @@ public class Main extends PApplet{
 			typeName();
 			break;
 		case 4:
+			if(lbj.getStatus()==2) {
+				
+			}else {
 			moveUp();
 			moveDown();
 			moveLeft();
 			moveRight();
+			}
 
 		}
 	}
@@ -241,12 +254,15 @@ public class Main extends PApplet{
 					lbj.move(1);
 					map[lbj.getMatY()][lbj.getMatX()]=0;
 					players.get(playerNumber-1).increaseScore(10);
+					dir=1;
 				}else if(lbj.getMatY() - 1 > -1 && map[lbj.getMatY() - 1][lbj.getMatX()] == 5) {
 					lbj.move(1);
 					map[lbj.getMatY()][lbj.getMatX()]=0;
 					players.get(playerNumber-1).increaseScore(50);
+					dir=1;
 				}else if(lbj.getMatY() - 1 > -1 && map[lbj.getMatY() - 1][lbj.getMatX()] == 0) {
 					lbj.move(1);
+					dir=1;
 				}
 			}
 		}
@@ -258,12 +274,15 @@ public class Main extends PApplet{
 					lbj.move(2);
 					map[lbj.getMatY()][lbj.getMatX()]=0;
 					players.get(playerNumber-1).increaseScore(10);
+					dir=2;
 				}else if(lbj.getMatY() + 1 < 15 && map[lbj.getMatY() + 1][lbj.getMatX()] == 5) {
 					lbj.move(2);
 					map[lbj.getMatY()][lbj.getMatX()]=0;
 					players.get(playerNumber-1).increaseScore(50);
+					dir=2;
 				}else if (lbj.getMatY() + 1 < 15 && map[lbj.getMatY() + 1][lbj.getMatX()] == 0) {
 					lbj.move(2);
+					dir=2;
 				}
 			}
 		}
@@ -278,12 +297,15 @@ public class Main extends PApplet{
 					lbj.move(3);
 					map[lbj.getMatY()][lbj.getMatX()]=0;
 					players.get(playerNumber-1).increaseScore(10);
+					dir=3;
 				}else if(lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 5) {
 					lbj.move(3);
 					map[lbj.getMatY()][lbj.getMatX()]=0;
 					players.get(playerNumber-1).increaseScore(50);
+					dir=3;
 				}else if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 0) {
 					lbj.move(3);
+					dir=3;
 				}
 
 			}
@@ -298,13 +320,16 @@ public class Main extends PApplet{
 					if (lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 4) {
 						lbj.move(4);
 						map[lbj.getMatY()][lbj.getMatX()]=0;
+						dir=4;
 						players.get(playerNumber-1).increaseScore(10);
 					}else if(lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 5) {
 						lbj.move(4);
 						map[lbj.getMatY()][lbj.getMatX()]=0;
 						players.get(playerNumber-1).increaseScore(50);
+						dir=4;
 					}else if (lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 0) {
 					lbj.move(4);
+					dir=4;
 				}
 				}
 			}

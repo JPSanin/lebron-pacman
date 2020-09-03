@@ -1,6 +1,7 @@
 package src;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Lebron {
 	private final static int NORMAL=1;
@@ -21,6 +22,7 @@ public class Lebron {
 	private int status;
 	private PApplet app;
 	
+	
 	public Lebron(PApplet app, int posX, int posY) {
 		this.app=app;
 		this.posX=posX;
@@ -32,18 +34,35 @@ public class Lebron {
 		acceleration=1;
 		health=3;
 		status=NORMAL;
+		
 	}
 	
-	public void draw() {
-		app.fill(255,0,0);
-		app.ellipse(posX, posY, size, size);
+	public void draw(PImage lbjLeft,PImage lbjRight,PImage lbjDown,PImage lbjUp, PImage lbjFrozen, int movement) {
+		if(status==FROZEN) {
+			app.image(lbjFrozen,posX, posY, size, size);
+		}else {
+			switch(movement) {
+			case UP:
+				app.image(lbjUp,posX, posY, size, size);
+				break;
+			case DOWN:
+				app.image(lbjDown,posX, posY, size, size);
+				break;
+			case LEFT:
+				app.image(lbjLeft,posX, posY, size, size);
+				break;
+			case RIGHT:
+				app.image(lbjRight ,posX, posY, size, size);
+				break;
+			
+			}
+		}
+	
 		
 	}
 	
 	public void move(int dir) {
-		if(status==FROZEN) {
-			acceleration=0;
-		}
+		if(status!=FROZEN) {
 			switch(dir) {
 			case UP:
 				moveUp();
@@ -58,6 +77,8 @@ public class Lebron {
 				moveRight();
 				break;
 			}
+		}
+			
 		
 	}
 	public void teleportLeft() {
