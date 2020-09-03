@@ -22,71 +22,82 @@ public abstract class Enemy {
 		this.matY= posY/40;
 		vel=40;
 		size=40;
-		r=1;
+		r=(int) app.random(4);
 
 	}
 
 	public void move(int[][]map) {
-		switch(r) {
-		case 1:
+		if(r==0) {
 			randomUp(map);
-			break;
-		case 2: 
-			randomDown(map);
-			break;
-		case 3:
-			randomRight(map);
-			break;
-		case 4:
-			randomLeft(map);
-			break;
-
-
 		}
+		if(r==1) {
+			randomDown(map);
+		}
+			
+		if(r==2) {
+			randomRight(map);
+		}
+		
+		if(r==3) {
+			randomLeft(map);
+		}
+	    if (this.matY - 1 > -1 &&
+	    	      this.matY + 1 < 15 && 
+	    	      this.matX + 1 < 20&&
+	    	      this.matX - 1 > -1 &&
+	    	      map[this.matY][this.matX - 1] == 0 &&
+	    	      map[this.matY][this.matX + 1] == 0 &&
+	    	      map[this.matY + 1][this.matX] == 0 &&
+	    	      map[this.matY - 1][this.matX] == 0) {
+	    	      this.r = (int)app.random(4);
+
+	    	    }	
+			
+			
+			
+
+
+		
 	}
 
 	private void randomUp(int[][] map) {
-		if (this.matY + 1 < 15 && (map[this.matY + 1][this.matX] == 0
-				|| map[this.matY + 1][this.matX] == 5 || map[this.matY + 1][this.matX] == 4)) {
+		if (this.matY + 1 < 15 && map[this.matY + 1][this.matX] == 0) {
 			this.matY += 1;
 			this.posY += this.vel;
 
 		} else {
-			this.r = (int)(app.random(1, 5));
+			r = (int)app.random(4);
 		}
 	}
 
 	private void randomDown(int[][] map) {
-		if (this.matY - 1 < -1 && (map[this.matY - 1][this.matX] == 0
-				|| map[this.matY - 1][this.matX] == 5 || map[this.matY - 1][this.matX] == 4)) {
+		if (this.matY - 1 > -1 && map[this.matY - 1][this.matX] == 0) {
 			this.matY -= 1;
 			this.posY -= this.vel;
 
 		} else {
-			this.r = (int)(app.random(1, 5));
+			r = (int)app.random(4);
 		}
 	}
 	
 	private void randomRight(int[][] map) {
-		if (this.matX + 1 < 20 && (map[this.matY][this.matX+1] == 0
-				|| map[this.matY][this.matX+1] == 5 || map[this.matY ][this.matX+1] == 4)) {
+		if (this.matX + 1 < 20 && map[this.matY][this.matX+1] == 0) {
 			this.matX += 1;
 			this.posX += this.vel;
 
 		} else {
-			this.r = (int)(app.random(1, 5));
+			r = (int)app.random(4);
 		}
 		
 	}
 	
 	public void randomLeft(int [][] map) {
-		if (this.matX - 1 < -1 && (map[this.matY ][this.matX- 1] == 0
-				|| map[this.matY ][this.matX- 1] == 5 || map[this.matY ][this.matX- 1] == 4)) {
+		if (this.matX - 1 > -1 && map[this.matY ][this.matX- 1] == 0) {
 			this.matX -= 1;
 			this.posX -= this.vel;
 
 		} else {
-			this.r = (int)(app.random(1, 5));
+			r = (int)app.random(4);
 		}
 	}
 	public abstract void draw(PImage image);

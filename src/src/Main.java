@@ -18,6 +18,7 @@ public class Main extends PApplet{
 	private PImage[] enemiesPics;
 	private PFont scoreBoard;
 	private int[][] map;
+	private int[][] enemyMap;
 	private int squareSize;
 	private Lebron lbj;
 	private int screen;
@@ -27,7 +28,10 @@ public class Main extends PApplet{
 	private int gameTime;
 	private int holdTime;
 	private int dir;
-	private Enemy[] enemies;
+	private Shaq shaq;
+	private Freeze freeze;
+	private Covid covid;
+	private Referee ref;
 	
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
@@ -58,6 +62,23 @@ public class Main extends PApplet{
 			{1, 5, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 5, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		};
+		enemyMap= new int[][]{ 
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+			{1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
+			{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+			{1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+			{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		};
 		squareSize=40;
 
 		homescreens= new PImage[4];
@@ -82,15 +103,10 @@ public class Main extends PApplet{
 		lebronImages[4]=loadImage("images/lbjFrozen.png");
 		heart=loadImage("images/heart.png");
 		invisibility=loadImage("images/invisibility.png");
-		enemies= new Enemy[4];
-		enemies[0]=new Referee(this,320,240);
-		enemies[1]=new Shaq(this,320,320);
-		enemies[2]=new Covid(this,400,240);
-		enemies[3]=new Freeze(this,400,320);
-		enemies[0].setR(4);
-		enemies[1].setR(4);
-		enemies[2].setR(3);
-		enemies[3].setR(3);
+		ref=new Referee(this,320,240);
+		shaq=new Shaq(this,320,320);
+		covid=new Covid(this,400,240);
+		freeze=new Freeze(this,400,320);
 		enemiesPics=new PImage[4];
 		enemiesPics[0]=loadImage("images/ref.png");
 		enemiesPics[1]=loadImage("images/shaq.png");
@@ -149,19 +165,24 @@ public class Main extends PApplet{
 				drawHealth(3);
 				paintMatrix();
 				lbj.draw(lebronImages[0],lebronImages[1],lebronImages[2],lebronImages[3],lebronImages[4],dir);
-				for(int i=0; i<enemies.length;i++) {
-					enemies[i].draw(enemiesPics[i]);
-					if (frameCount % 12 == 0) {
-						enemies[i].move(map);
-					}
-					
+				ref.draw(enemiesPics[0]);
+				shaq.draw(enemiesPics[1]);
+				covid.draw(enemiesPics[2]);
+				freeze.draw(enemiesPics[3]);
+				if (frameCount % 12 == 0) {
+					//enemies[0].move(enemyMap);
+					ref.move(enemyMap);
+					shaq.move(enemyMap);
+					covid.move(enemyMap);
+					freeze.move(enemyMap);
 				}
 				fill(225,0,0);
 				textFont(scoreBoard);
 				textSize(32);
 				text(players.get(playerNumber-1).getTime(),460,55);
 				text( players.get(playerNumber-1).getScore(),700, 55);
-				//System.out.println(realTime);
+				System.out.println(shaq.getR());
+				System.out.println(shaq.getMatX()+","+shaq.getMatY());
 			
 
 			break;
