@@ -1,14 +1,17 @@
 package src;
 
+import processing.core.PApplet;
+import processing.core.PImage;
+
 public class Freeze extends Enemy {
 	
-	public Freeze(int posX, int posY) {
-		super(posX,posY);
+	public Freeze(PApplet app,int posX, int posY) {
+		super(app,posX,posY);
 	}
 
 	@Override
-	public void draw() {
-	
+	public void draw(PImage image) {
+		getApp().image(image, getPosX(), getPosY(), getSize(),getSize());
 	}
 	
 	

@@ -13,6 +13,9 @@ public class Main extends PApplet{
 	private PImage littleBall;
 	private PImage mapScreen; 
 	private PImage[] lebronImages;
+	private PImage heart;
+	private PImage invisibility;
+	private PImage[] enemiesPics;
 	private PFont scoreBoard;
 	private int[][] map;
 	private int squareSize;
@@ -24,6 +27,7 @@ public class Main extends PApplet{
 	private int gameTime;
 	private int holdTime;
 	private int dir;
+	private Enemy[] enemies;
 	
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
@@ -44,9 +48,9 @@ public class Main extends PApplet{
 			{1, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 1},
 			{1, 4, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 4, 1},
 			{1, 4, 1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
-			{1, 4, 1, 4, 1, 4, 5, 4, 3, 3, 3, 4, 1, 4, 1, 1, 4, 1, 4, 1},
-			{1, 4, 1, 4, 1, 4, 1, 4, 3, 3, 3, 4, 1, 5, 4, 4, 4, 1, 4, 1},
-			{0, 4, 1, 5, 1, 4, 1, 4, 3, 3, 3, 4, 1, 1, 1, 1, 4, 1, 4, 0},
+			{1, 4, 1, 4, 1, 4, 5, 4, 1, 1, 1, 4, 1, 4, 1, 1, 4, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 4, 1, 1, 1, 4, 1, 5, 4, 4, 4, 1, 4, 1},
+			{0, 4, 1, 5, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1, 1, 4, 1, 4, 0},
 			{1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 4, 4, 1, 4, 1},
 			{1, 4, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 4, 1},
 			{1, 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 5, 1, 4, 1},
@@ -76,6 +80,22 @@ public class Main extends PApplet{
 		lebronImages[2]=loadImage("images/lbjDown.png");
 		lebronImages[3]=loadImage("images/lbjUp.png");
 		lebronImages[4]=loadImage("images/lbjFrozen.png");
+		heart=loadImage("images/heart.png");
+		invisibility=loadImage("images/invisibility.png");
+		enemies= new Enemy[4];
+		enemies[0]=new Referee(this,320,240);
+		enemies[1]=new Shaq(this,320,320);
+		enemies[2]=new Covid(this,400,240);
+		enemies[3]=new Freeze(this,400,320);
+		enemies[0].setR(4);
+		enemies[1].setR(4);
+		enemies[2].setR(3);
+		enemies[3].setR(3);
+		enemiesPics=new PImage[4];
+		enemiesPics[0]=loadImage("images/ref.png");
+		enemiesPics[1]=loadImage("images/shaq.png");
+		enemiesPics[2]=loadImage("images/covid.png");
+		enemiesPics[3]=loadImage("images/freeze.png");
 		
 		name="";
 		playerNumber=0;
@@ -124,9 +144,18 @@ public class Main extends PApplet{
 		case 4:
 				int realTime=gameTime-holdTime;
 				players.get(playerNumber-1).calculateTime(realTime);
+				
 				image(mapScreen,0,0,800,600);
+				drawHealth(3);
 				paintMatrix();
 				lbj.draw(lebronImages[0],lebronImages[1],lebronImages[2],lebronImages[3],lebronImages[4],dir);
+				for(int i=0; i<enemies.length;i++) {
+					enemies[i].draw(enemiesPics[i]);
+					if (frameCount % 12 == 0) {
+						enemies[i].move(map);
+					}
+					
+				}
 				fill(225,0,0);
 				textFont(scoreBoard);
 				textSize(32);
@@ -138,7 +167,7 @@ public class Main extends PApplet{
 			break;
 
 		}
-		fill(0,255,0);
+		fill(0);
 		textSize(12);
 		text("" + mouseX + "," + mouseY, mouseX, mouseY);
 		
@@ -186,13 +215,11 @@ public class Main extends PApplet{
 			typeName();
 			break;
 		case 4:
-			if(lbj.getStatus()==2) {
-				
-			}else {
-			moveUp();
-			moveDown();
-			moveLeft();
-			moveRight();
+			if(lbj.getStatus()==1) {
+				moveUp();
+				moveDown();
+				moveLeft();
+				moveRight();
 			}
 
 		}
@@ -336,4 +363,24 @@ public class Main extends PApplet{
 		}
 		
 	}
+	
+	public void drawHealth(int health) {
+		switch(health) {
+		case 1:
+			image(heart,40,23,squareSize,squareSize);
+			break;
+		case 2:
+			image(heart,40,23,squareSize,squareSize);
+			image(heart,90,23,squareSize,squareSize);
+			break;
+		case 3: 
+			image(heart,40,23,squareSize,squareSize);
+			image(heart,90,23,squareSize,squareSize);
+			image(heart,140,23,squareSize,squareSize);
+	
+			break;
+		}
+		
+	}
+
 }
