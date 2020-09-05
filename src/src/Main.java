@@ -223,9 +223,10 @@ public class Main extends PApplet{
 				validateHit(lbj,enemies[3]);
 			}
 			if(lbj.getStatus()==2) {
-				freezeTime=millis()/1000;
-				//freezeTime2=(freezeTime-realTime);
 				freezeTimeFinal=millis()/1000-freezeTime;
+				if(freezeTimeFinal==5) {
+					lbj.setStatus(1);
+				}
 				
 			}
 			/*ref.draw(enemiesPics[0]);
@@ -492,6 +493,7 @@ public class Main extends PApplet{
 		if(bad instanceof Freeze) {
 			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
 				hitTime1=millis()/1000;
+				freezeTime=gameTime;
 				hitFreeze=true;
 				lbj.setStatus(2);
 				}
