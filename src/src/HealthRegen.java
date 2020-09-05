@@ -1,14 +1,17 @@
 package src;
 
+import processing.core.PApplet;
+import processing.core.PImage;
+
 public class HealthRegen extends PowerUp {
 	
-	public HealthRegen(int posX, int posY) {
-		super(posX,posY);
+	public HealthRegen (PApplet app, int posX, int posY) {
+		super(app, posX,posY);
 	}
 
 	@Override
-	public void draw() {
-	
+	public void draw(PImage power) {
+		getApp().image(power, getPosX(), getPosY(), getSize(),getSize());
 	}
 
 }

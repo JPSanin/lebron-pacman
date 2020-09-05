@@ -14,7 +14,13 @@ public class Main extends PApplet{
 	private PImage mapScreen; 
 	private PImage[] lebronImages;
 	private PImage heart;
-	private PImage invisibility;
+	private PImage inv;
+	private Invisibility invisible;
+	private int invX;
+	private int invY;
+	private int hX;
+	private int hY;
+	private HealthRegen health;
 	private PImage[] enemiesPics;
 	private PFont scoreBoard;
 	private int[][] map;
@@ -34,15 +40,12 @@ public class Main extends PApplet{
 	private int hitTimeFinal;
 	private int freezeTime;
 	private int freezeTimeFinal;
+	private int invisibleTimeFinal;
+	private int invisibleTime;
 	private boolean hitRef;
 	private boolean hitShaq;
 	private boolean hitCovid;
 	private boolean hitFreeze;
-	/*private Shaq shaq;
-	private Freeze freeze;
-	private Covid covid;
-	private Referee ref;*/
-
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
 
@@ -101,10 +104,12 @@ public class Main extends PApplet{
 		namescreens[0]=loadImage("images/NameScreen.png");
 		namescreens[1]=loadImage("images/NameScreenGo.png");
 		namescreens[2]=loadImage("images/NameScreenError.png");
+		
 		mapScreen=loadImage("images/Map.png");
 		scoreBoard= createFont("fonts/60s Scoreboard.ttf", 32);
 		bigBall=loadImage("images/bigBall.png");
 		littleBall=loadImage("images/littleBall.png");
+		
 		lebronImages=new PImage[5];
 		lebronImages[0]=loadImage("images/lbj.png");
 		lebronImages[1]=loadImage("images/lbjRight.png");
@@ -112,16 +117,14 @@ public class Main extends PApplet{
 		lebronImages[3]=loadImage("images/lbjUp.png");
 		lebronImages[4]=loadImage("images/lbjFrozen.png");
 		heart=loadImage("images/heart.png");
-		invisibility=loadImage("images/invisibility.png");
-		/*ref=new Referee(this,320,240);
-		shaq=new Shaq(this,320,320);
-		covid=new Covid(this,400,240);
-		freeze=new Freeze(this,400,320);*/
+		inv=loadImage("images/invisibility.png");
+		
 		enemiesPics=new PImage[4];
 		enemiesPics[0]=loadImage("images/ref.png");
 		enemiesPics[1]=loadImage("images/shaq.png");
 		enemiesPics[2]=loadImage("images/covid.png");
 		enemiesPics[3]=loadImage("images/freeze.png");
+		
 		enemies= new Enemy[4];
 		enemies[0]=new Referee(this,320,240);
 		enemies[1]=new Shaq(this,320,320);
@@ -134,9 +137,22 @@ public class Main extends PApplet{
 		hitFreeze=false;
 		playerNumber=0;
 		players= new ArrayList<Player>();
+		
+		do {
+			invX= (int) random(1,19);
+			invY= (int) random(4,14);
+			hX= (int) random(1,19);
+			hY= (int) random(4,14);	
+			
+		}while(enemyMap[invY][invX]==1 || enemyMap[hY][hX]==1 || hX==invX || hY==invX);
+		
+		
+		invisible= new Invisibility (this,invX*40,invY*40);
+		health= new HealthRegen(this, hX*40, hY*40);
 		lbj= new Lebron(this, 40, 120);
 		dir=4;
 		screen=0;
+		
 	}
 
 	public void draw() {
@@ -179,10 +195,17 @@ public class Main extends PApplet{
 			int realTime=gameTime-holdTime;
 			
 			players.get(playerNumber-1).calculateTime(realTime);
-
+			noTint();
 			image(mapScreen,0,0,800,600);
 			drawHealth(lbj.getHealth());
 			paintMatrix();
+			if(invisible.isUsed()==false) {
+				invisible.draw(inv);	
+			}
+			if(health.isUsed()==false) {
+				health.draw(heart);
+			}
+			
 			lbj.draw(lebronImages[0],lebronImages[1],lebronImages[2],lebronImages[3],lebronImages[4],dir);
 			for (int i=0;i< enemies.length;i++) {
 				enemies[i].draw(enemiesPics[i]);
@@ -237,24 +260,23 @@ public class Main extends PApplet{
 				}
 				
 			}
-			/*ref.draw(enemiesPics[0]);
-				shaq.draw(enemiesPics[1]);
-				covid.draw(enemiesPics[2]);
-				freeze.draw(enemiesPics[3]);
-				if (frameCount % 12 == 0) {
-					ref.move(enemyMap);
-					shaq.move(enemyMap);
-					covid.move(enemyMap);
-					freeze.move(enemyMap);
-				}*/
+			
+			if(lbj.getStatus()==3) {
+				invisibleTimeFinal=millis()/1000-invisibleTime;
+				if(invisibleTimeFinal==7) {
+					lbj.setStatus(1);
+				}
+				
+			}
+			activatePower(lbj,invisible);
+			activatePower(lbj,health);
+			
 			fill(225,0,0);
 			textFont(scoreBoard);
 			textSize(32);
 			text(players.get(playerNumber-1).getTime(),460,55);
 			text( players.get(playerNumber-1).getScore(),700, 55);
-			//System.out.println(shaq.getR());
-			//System.out.println(shaq.getMatX()+","+shaq.getMatY());
-
+			//System.out.println(invisible.getPosX()+","+invisible.getPosY());
 			break;
 
 		}
@@ -306,7 +328,7 @@ public class Main extends PApplet{
 			typeName();
 			break;
 		case 4:
-			if(lbj.getStatus()==1) {
+			if(lbj.getStatus()!=2) {
 				moveUp();
 				moveDown();
 				moveLeft();
@@ -366,6 +388,7 @@ public class Main extends PApplet{
 
 		}
 	}
+	
 	public void moveUp() {
 		if (key == CODED) {
 			if (keyCode == UP) {
@@ -456,6 +479,7 @@ public class Main extends PApplet{
 
 	}
 
+	
 	public void drawHealth(int health) {
 		switch(health) {
 		case 1:
@@ -475,6 +499,7 @@ public class Main extends PApplet{
 	}
 
 	public void validateHit(Lebron lbj, Enemy bad) {
+		if(lbj.getStatus()!=3) {
 		if(bad instanceof Referee) {
 			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
 				hitTime1=millis()/1000;
@@ -508,5 +533,29 @@ public class Main extends PApplet{
 				}
 
 		}
+		}
+	}
+	
+	public void activatePower(Lebron lbj, PowerUp power) {
+		if(power.isUsed()==false) {
+			if(power instanceof Invisibility) {
+				if (dist(lbj.getPosX(), lbj.getPosY(), power.getPosX(), power.getPosY()) < 40) {
+					invisibleTime=gameTime;
+					power.setUsed(true);
+					lbj.setStatus(3);
+				}
+			}
+			
+			if(power instanceof HealthRegen) {
+				if(lbj.getHealth()!=3) {
+					if (dist(lbj.getPosX(), lbj.getPosY(), power.getPosX(), power.getPosY()) < 40) {
+						power.setUsed(true);
+						lbj.setHealth(lbj.getHealth()+1);
+					}	
+				}
+			}
+			
+		}
+		
 	}
 }

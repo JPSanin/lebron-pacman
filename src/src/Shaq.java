@@ -11,6 +11,7 @@ public class Shaq extends Enemy{
 
 	@Override
 	public void draw(PImage image) {
+		getApp().noTint();
 		getApp().image(image, getPosX(), getPosY(), getSize(),getSize());
 	}
 

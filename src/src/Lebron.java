@@ -6,6 +6,7 @@ import processing.core.PImage;
 public class Lebron {
 	private final static int NORMAL=1;
 	private final static int FROZEN=2;
+	private final static int INVISIBLE=3;
 	private final static int UP=1;
 	private final static int DOWN=2;
 	private final static int LEFT=3;
@@ -38,8 +39,26 @@ public class Lebron {
 	
 	public void draw(PImage lbjLeft,PImage lbjRight,PImage lbjDown,PImage lbjUp, PImage lbjFrozen, int movement) {
 		if(status==FROZEN) {
+			app.noTint();
 			app.image(lbjFrozen,posX, posY, size, size);
-		}else {
+		}else if(status==INVISIBLE){
+			app.tint(255, 128);
+			switch(movement) {
+			case UP:				
+				app.image(lbjUp,posX, posY, size, size);
+				break;
+			case DOWN:				
+				app.image(lbjDown,posX, posY, size, size);
+				break;
+			case LEFT:				
+				app.image(lbjLeft,posX, posY, size, size);
+				break;
+			case RIGHT:				
+				app.image(lbjRight ,posX, posY, size, size);
+				break;
+			}
+		}else{
+			app.noTint();
 			switch(movement) {
 			case UP:
 				app.image(lbjUp,posX, posY, size, size);
@@ -61,7 +80,7 @@ public class Lebron {
 	}
 	
 	public void move(int dir) {
-		if(status==NORMAL) {
+		if(status!=FROZEN) {
 			switch(dir) {
 			case UP:
 				moveUp();
