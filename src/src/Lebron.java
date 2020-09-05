@@ -6,7 +6,6 @@ import processing.core.PImage;
 public class Lebron {
 	private final static int NORMAL=1;
 	private final static int FROZEN=2;
-	private final static int SLOWED=3;
 	private final static int UP=1;
 	private final static int DOWN=2;
 	private final static int LEFT=3;
@@ -62,7 +61,7 @@ public class Lebron {
 	}
 	
 	public void move(int dir) {
-		if(status!=FROZEN) {
+		if(status==NORMAL) {
 			switch(dir) {
 			case UP:
 				moveUp();

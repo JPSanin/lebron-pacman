@@ -33,7 +33,6 @@ public class Main extends PApplet{
 	private int hitTime2;
 	private int hitTimeFinal;
 	private int freezeTime;
-	private int freezeTime2;
 	private int freezeTimeFinal;
 	private boolean hitRef;
 	private boolean hitShaq;
@@ -137,7 +136,7 @@ public class Main extends PApplet{
 		players= new ArrayList<Player>();
 		lbj= new Lebron(this, 40, 120);
 		dir=4;
-		screen=2;
+		screen=0;
 	}
 
 	public void draw() {
@@ -202,6 +201,15 @@ public class Main extends PApplet{
 				validateHit(lbj,enemies[0]);
 			}
 			
+			if(hitShaq==true) {
+				hitTime2=millis()/1000;
+				hitTimeFinal=(hitTime2-hitTime1);
+				if (hitTimeFinal >= 2) {
+                    hitShaq = false;
+                }
+			}else {
+				validateHit(lbj,enemies[1]);
+			}
 			
 			if(hitCovid==true) {
 				hitTime2=millis()/1000;
@@ -246,7 +254,6 @@ public class Main extends PApplet{
 			text( players.get(playerNumber-1).getScore(),700, 55);
 			//System.out.println(shaq.getR());
 			//System.out.println(shaq.getMatX()+","+shaq.getMatY());
-			System.out.println(freezeTimeFinal);
 
 			break;
 
@@ -293,7 +300,7 @@ public class Main extends PApplet{
 	}
 
 	public void keyPressed() {
-
+		
 		switch(screen) {
 		case 2:
 			typeName();
@@ -305,6 +312,7 @@ public class Main extends PApplet{
 				moveLeft();
 				moveRight();
 			}
+
 
 		}
 	}
@@ -479,7 +487,8 @@ public class Main extends PApplet{
 			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
 				hitTime1=millis()/1000;
 				hitShaq=true;
-				
+				players.get(playerNumber-1).decreaseScore(100);
+				lbj.setHealth(lbj.getHealth()-1);
 				}
 
 		}
