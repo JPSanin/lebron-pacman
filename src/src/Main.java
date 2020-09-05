@@ -28,11 +28,22 @@ public class Main extends PApplet{
 	private int gameTime;
 	private int holdTime;
 	private int dir;
-	private Shaq shaq;
+	private Enemy[] enemies;
+	private int hitTime1;
+	private int hitTime2;
+	private int hitTimeFinal;
+	private int freezeTime;
+	private int freezeTime2;
+	private int freezeTimeFinal;
+	private boolean hitRef;
+	private boolean hitShaq;
+	private boolean hitCovid;
+	private boolean hitFreeze;
+	/*private Shaq shaq;
 	private Freeze freeze;
 	private Covid covid;
-	private Referee ref;
-	
+	private Referee ref;*/
+
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
 
@@ -103,17 +114,25 @@ public class Main extends PApplet{
 		lebronImages[4]=loadImage("images/lbjFrozen.png");
 		heart=loadImage("images/heart.png");
 		invisibility=loadImage("images/invisibility.png");
-		ref=new Referee(this,320,240);
+		/*ref=new Referee(this,320,240);
 		shaq=new Shaq(this,320,320);
 		covid=new Covid(this,400,240);
-		freeze=new Freeze(this,400,320);
+		freeze=new Freeze(this,400,320);*/
 		enemiesPics=new PImage[4];
 		enemiesPics[0]=loadImage("images/ref.png");
 		enemiesPics[1]=loadImage("images/shaq.png");
 		enemiesPics[2]=loadImage("images/covid.png");
 		enemiesPics[3]=loadImage("images/freeze.png");
-		
+		enemies= new Enemy[4];
+		enemies[0]=new Referee(this,320,240);
+		enemies[1]=new Shaq(this,320,320);
+		enemies[2]=new Covid(this,400,240);
+		enemies[3]=new Freeze(this,400,320);
 		name="";
+		hitRef=false;
+		hitShaq=false;
+		hitCovid=false;
+		hitFreeze=false;
 		playerNumber=0;
 		players= new ArrayList<Player>();
 		lbj= new Lebron(this, 40, 120);
@@ -158,32 +177,75 @@ public class Main extends PApplet{
 			break;
 
 		case 4:
-				int realTime=gameTime-holdTime;
-				players.get(playerNumber-1).calculateTime(realTime);
+			int realTime=gameTime-holdTime;
+			
+			players.get(playerNumber-1).calculateTime(realTime);
+
+			image(mapScreen,0,0,800,600);
+			drawHealth(lbj.getHealth());
+			paintMatrix();
+			lbj.draw(lebronImages[0],lebronImages[1],lebronImages[2],lebronImages[3],lebronImages[4],dir);
+			for (int i=0;i< enemies.length;i++) {
+				enemies[i].draw(enemiesPics[i]);
+				if (frameCount % 12 == 0) {
+					enemies[i].move(enemyMap);
+				}
+
+			}
+			if(hitRef==true) {
+				hitTime2=millis()/1000;
+				hitTimeFinal=(hitTime2-hitTime1);
+				if (hitTimeFinal >= 2) {
+                    hitRef = false;
+                }
+			}else {
+				validateHit(lbj,enemies[0]);
+			}
+			
+			
+			if(hitCovid==true) {
+				hitTime2=millis()/1000;
+				hitTimeFinal=(hitTime2-hitTime1);
+				if (hitTimeFinal >= 2) {
+                    hitCovid = false;
+                }
+			}else {
+				validateHit(lbj,enemies[2]);
+			}
+			
+			if(hitFreeze==true) {
+				hitTime2=millis()/1000;
+				hitTimeFinal=(hitTime2-hitTime1);
+				if (hitTimeFinal >= 2) {
+                    hitFreeze = false;
+                }
+			}else {
+				validateHit(lbj,enemies[3]);
+			}
+			if(lbj.getStatus()==2) {
+				freezeTime=millis()/1000;
+				//freezeTime2=(freezeTime-realTime);
+				freezeTimeFinal=millis()/1000-freezeTime;
 				
-				image(mapScreen,0,0,800,600);
-				drawHealth(3);
-				paintMatrix();
-				lbj.draw(lebronImages[0],lebronImages[1],lebronImages[2],lebronImages[3],lebronImages[4],dir);
-				ref.draw(enemiesPics[0]);
+			}
+			/*ref.draw(enemiesPics[0]);
 				shaq.draw(enemiesPics[1]);
 				covid.draw(enemiesPics[2]);
 				freeze.draw(enemiesPics[3]);
 				if (frameCount % 12 == 0) {
-					//enemies[0].move(enemyMap);
 					ref.move(enemyMap);
 					shaq.move(enemyMap);
 					covid.move(enemyMap);
 					freeze.move(enemyMap);
-				}
-				fill(225,0,0);
-				textFont(scoreBoard);
-				textSize(32);
-				text(players.get(playerNumber-1).getTime(),460,55);
-				text( players.get(playerNumber-1).getScore(),700, 55);
-				System.out.println(shaq.getR());
-				System.out.println(shaq.getMatX()+","+shaq.getMatY());
-			
+				}*/
+			fill(225,0,0);
+			textFont(scoreBoard);
+			textSize(32);
+			text(players.get(playerNumber-1).getTime(),460,55);
+			text( players.get(playerNumber-1).getScore(),700, 55);
+			//System.out.println(shaq.getR());
+			//System.out.println(shaq.getMatX()+","+shaq.getMatY());
+			System.out.println(freezeTimeFinal);
 
 			break;
 
@@ -191,7 +253,7 @@ public class Main extends PApplet{
 		fill(0);
 		textSize(12);
 		text("" + mouseX + "," + mouseY, mouseX, mouseY);
-		
+
 	}
 
 	public void mousePressed() {
@@ -277,22 +339,22 @@ public class Main extends PApplet{
 				if(map[rows][columns] == 5) {
 					fill(0,0,255);
 					stroke(255);
-					
+
 					image(bigBall,0+ (columns * squareSize),0 + (rows * squareSize),squareSize,squareSize);	
 				}
 			}
-	}
+		}
 	}
 	public void typeName() {
 		if(key==BACKSPACE) {
 			if (name != null && name.length() > 0 ) {
-		        name = name.substring(0, name.length() - 1);
-		    }
+				name = name.substring(0, name.length() - 1);
+			}
 		}else if(key!=CODED){
 			if(name.length()<=15) {
 				name+=key;
 			}
-			
+
 		}
 	}
 	public void moveUp() {
@@ -337,28 +399,28 @@ public class Main extends PApplet{
 	}
 	public void moveLeft() {
 		if (key == CODED) {
-		if (keyCode == LEFT) {
-			if(lbj.getMatX() ==0 &&  lbj.getMatY()==8) {
-				lbj.teleportLeft();
-			}else {
-				if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 4) {
-					lbj.move(3);
-					map[lbj.getMatY()][lbj.getMatX()]=0;
-					players.get(playerNumber-1).increaseScore(10);
-					dir=3;
-				}else if(lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 5) {
-					lbj.move(3);
-					map[lbj.getMatY()][lbj.getMatX()]=0;
-					players.get(playerNumber-1).increaseScore(50);
-					dir=3;
-				}else if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 0) {
-					lbj.move(3);
-					dir=3;
-				}
+			if (keyCode == LEFT) {
+				if(lbj.getMatX() ==0 &&  lbj.getMatY()==8) {
+					lbj.teleportLeft();
+				}else {
+					if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 4) {
+						lbj.move(3);
+						map[lbj.getMatY()][lbj.getMatX()]=0;
+						players.get(playerNumber-1).increaseScore(10);
+						dir=3;
+					}else if(lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 5) {
+						lbj.move(3);
+						map[lbj.getMatY()][lbj.getMatX()]=0;
+						players.get(playerNumber-1).increaseScore(50);
+						dir=3;
+					}else if (lbj.getMatX() - 1 > -1 && map[lbj.getMatY()][lbj.getMatX()-1] == 0) {
+						lbj.move(3);
+						dir=3;
+					}
 
+				}
 			}
-		}
-	}}
+		}}
 	public void moveRight() {
 		if (key == CODED) {
 			if (keyCode == RIGHT) {
@@ -376,15 +438,15 @@ public class Main extends PApplet{
 						players.get(playerNumber-1).increaseScore(50);
 						dir=4;
 					}else if (lbj.getMatX() + 1 < 20 && map[lbj.getMatY()][lbj.getMatX()+1] == 0) {
-					lbj.move(4);
-					dir=4;
-				}
+						lbj.move(4);
+						dir=4;
+					}
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public void drawHealth(int health) {
 		switch(health) {
 		case 1:
@@ -398,10 +460,42 @@ public class Main extends PApplet{
 			image(heart,40,23,squareSize,squareSize);
 			image(heart,90,23,squareSize,squareSize);
 			image(heart,140,23,squareSize,squareSize);
-	
 			break;
 		}
-		
+
 	}
 
+	public void validateHit(Lebron lbj, Enemy bad) {
+		if(bad instanceof Referee) {
+			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
+				hitTime1=millis()/1000;
+				hitRef=true;
+				players.get(playerNumber-1).decreaseScore(100);
+				}
+			
+		}
+		if(bad instanceof Shaq) {
+			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
+				hitTime1=millis()/1000;
+				hitShaq=true;
+				
+				}
+
+		}
+		if(bad instanceof Covid) {
+			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
+				hitTime1=millis()/1000;
+				hitCovid=true;
+				lbj.setHealth(lbj.getHealth()-1);
+				}
+		}
+		if(bad instanceof Freeze) {
+			if (dist(lbj.getPosX(), lbj.getPosY(), bad.getPosX(), bad.getPosY()) < 40) {
+				hitTime1=millis()/1000;
+				hitFreeze=true;
+				lbj.setStatus(2);
+				}
+
+		}
+	}
 }
