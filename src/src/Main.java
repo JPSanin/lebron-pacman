@@ -26,6 +26,7 @@ public class Main extends PApplet{
 	private PImage[] enemiesPics;
 	private PFont scoreBoard;
 	private int[][] map;
+	private int[][] winMap;
 	private int[][] enemyMap;
 	private int squareSize;
 	private Lebron lbj;
@@ -77,6 +78,25 @@ public class Main extends PApplet{
 			{1, 4, 1, 1, 1, 1, 4, 5, 4, 1, 1, 4, 4, 4, 1, 1, 1, 1, 4, 1},
 			{1, 5, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 5, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		};
+		
+		winMap= new int[][] {
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+			{1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+			{0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0},
+			{1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+			{1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
+			{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+			{1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+			{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			
 		};
 		enemyMap= new int[][]{ 
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
@@ -141,6 +161,8 @@ public class Main extends PApplet{
 		hitShaq=false;
 		hitCovid=false;
 		hitFreeze=false;
+		
+		//No reset
 		playerNumber=0;
 		players= new ArrayList<Player>();
 		
@@ -157,7 +179,7 @@ public class Main extends PApplet{
 		health= new HealthRegen(this, hX*40, hY*40);
 		lbj= new Lebron(this, 40, 120);
 		dir=4;
-		screen=0;
+		screen=7;
 		
 	}
 
@@ -200,6 +222,13 @@ public class Main extends PApplet{
 		case 4:
 			if(gameOver(lbj)) {
 				screen=5;
+			}
+			if(win()) {
+				System.out.println("yes");
+				System.out.println("Time: "+players.get(playerNumber-1).getName());
+				System.out.println("Time: "+players.get(playerNumber-1).getTime());
+				System.out.println("Score: "+players.get(playerNumber-1).getScore());
+				screen=6;
 			}
 			int realTime=gameTime-holdTime;
 			
@@ -301,18 +330,38 @@ public class Main extends PApplet{
 			}	
 			break;
 		case 6:
+			fill(225,0,0);
+			textFont(scoreBoard);
+			textSize(32);
+			text("WINNER",400,300);
+			textSize(15);
+			text("Score will be added to leaderboard",400,325);
+			if((millis()/1000)%2==0) {
+				
+				text("Click anywhere to continue",400,350);	
+			}
+			
+			break;
+		case 7:
 			image(leaderBoardScreen1,0,0,800,600);
-
+			
 			if (mouseX > 275 && mouseX <525 && mouseY > 480 && mouseY < 540) {
 				image(leaderBoardScreen2,0,0,800,600);
 			}
-			break;
 			
+			//for(int i=0; )
+			fill(225,0,0);
+			textFont(scoreBoard);
+			textSize(32);
+			text("Name",245,215);
+			text("Time",475,215);
+			text("Score",630,215);
+			break;
 			
 		
 
 		}
-		fill(0);
+		fill(255);
 		textSize(12);
 		text("" + mouseX + "," + mouseY, mouseX, mouseY);
 
@@ -350,8 +399,12 @@ public class Main extends PApplet{
 			}
 			break;
 		case 5:
-			screen=6;
+			screen=7;
 			break;
+		case 6:
+			screen=7;
+			break;
+		
 
 		}
 	}
@@ -601,5 +654,21 @@ public class Main extends PApplet{
 			lose= true;
 		}
 		return lose;
+	}
+	
+	public boolean win() {
+		boolean win=true;
+		
+		 for(int i = 0; i < 20 && win==true; i++){  
+             for(int j = 0; j < 15; j++){  
+               if(map[j][i] != winMap[j][i]){ 
+            	   win= false; 
+               }
+               
+             }
+		 }
+	
+		
+		return win;
 	}
 }
