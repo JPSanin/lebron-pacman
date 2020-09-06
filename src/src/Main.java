@@ -179,7 +179,7 @@ public class Main extends PApplet{
 		health= new HealthRegen(this, hX*40, hY*40);
 		lbj= new Lebron(this, 40, 120);
 		dir=4;
-		screen=7;
+		screen=0;
 		
 	}
 
@@ -349,13 +349,16 @@ public class Main extends PApplet{
 				image(leaderBoardScreen2,0,0,800,600);
 			}
 			
-			//for(int i=0; )
 			fill(225,0,0);
 			textFont(scoreBoard);
-			textSize(32);
-			text("Name",245,215);
-			text("Time",475,215);
-			text("Score",630,215);
+			textSize(24);
+			for(int i=0; i<players.size() && i<7; i++){
+				text(players.get(i).getName(),245,225+(i*35));
+				text(players.get(i).getTime(),475,225+(i*35));
+				text(players.get(i).getScore(),630,225+(i*35));
+			}
+			
+			
 			break;
 			
 		
@@ -399,12 +402,17 @@ public class Main extends PApplet{
 			}
 			break;
 		case 5:
+			players.remove(playerNumber-1);
 			screen=7;
 			break;
 		case 6:
 			screen=7;
 			break;
-		
+		case 7:
+			if (mouseX > 275 && mouseX <525 && mouseY > 480 && mouseY < 540) {
+				reset();
+			}
+			break;
 
 		}
 	}
@@ -670,5 +678,50 @@ public class Main extends PApplet{
 	
 		
 		return win;
+	}
+	
+	public void reset() {
+		map = new int[][]{ 
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 1},
+			{1, 4, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
+			{1, 4, 1, 4, 1, 4, 5, 4, 1, 1, 1, 4, 1, 4, 1, 1, 4, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 4, 1, 1, 1, 4, 1, 5, 4, 4, 4, 1, 4, 1},
+			{0, 4, 1, 5, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1, 1, 4, 1, 4, 0},
+			{1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 4, 4, 1, 4, 1},
+			{1, 4, 1, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 4, 1},
+			{1, 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 5, 1, 4, 1},
+			{1, 4, 1, 1, 1, 1, 4, 5, 4, 1, 1, 4, 4, 4, 1, 1, 1, 1, 4, 1},
+			{1, 5, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 5, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		};
+		
+		hitRef=false;
+		hitShaq=false;
+		hitCovid=false;
+		hitFreeze=false;
+		
+		do {
+			invX= (int) random(1,19);
+			invY= (int) random(4,14);
+			hX= (int) random(1,19);
+			hY= (int) random(4,14);	
+			
+		}while(enemyMap[invY][invX]==1 || enemyMap[hY][hX]==1 || hX==invX || hY==invX);
+		enemies= new Enemy[4];
+		enemies[0]=new Referee(this,320,240);
+		enemies[1]=new Shaq(this,320,320);
+		enemies[2]=new Covid(this,400,240);
+		enemies[3]=new Freeze(this,400,320);
+		name="";
+		invisible= new Invisibility (this,invX*40,invY*40);
+		health= new HealthRegen(this, hX*40, hY*40);
+		lbj= new Lebron(this, 40, 120);
+		dir=4;
+		screen=0;
+		
 	}
 }
