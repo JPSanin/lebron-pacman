@@ -15,6 +15,8 @@ public class Main extends PApplet{
 	private PImage[] lebronImages;
 	private PImage heart;
 	private PImage inv;
+	private PImage leaderBoardScreen1;
+	private PImage leaderBoardScreen2;
 	private Invisibility invisible;
 	private int invX;
 	private int invY;
@@ -46,6 +48,7 @@ public class Main extends PApplet{
 	private boolean hitShaq;
 	private boolean hitCovid;
 	private boolean hitFreeze;
+	
 	public static void main(String[] args) {
 		PApplet.main(Main.class.getName());
 
@@ -125,6 +128,9 @@ public class Main extends PApplet{
 		enemiesPics[2]=loadImage("images/covid.png");
 		enemiesPics[3]=loadImage("images/freeze.png");
 		
+		leaderBoardScreen1=loadImage("images/leaderBoard1.png");
+		leaderBoardScreen2=loadImage("images/leaderBoard2.png");
+		
 		enemies= new Enemy[4];
 		enemies[0]=new Referee(this,320,240);
 		enemies[1]=new Shaq(this,320,320);
@@ -156,7 +162,7 @@ public class Main extends PApplet{
 	}
 
 	public void draw() {
-		background(255);
+		background(0);
 		gameTime=millis()/1000;
 
 		switch(screen) {
@@ -192,6 +198,9 @@ public class Main extends PApplet{
 			break;
 
 		case 4:
+			if(gameOver(lbj)) {
+				screen=5;
+			}
 			int realTime=gameTime-holdTime;
 			
 			players.get(playerNumber-1).calculateTime(realTime);
@@ -278,6 +287,29 @@ public class Main extends PApplet{
 			text( players.get(playerNumber-1).getScore(),700, 55);
 			//System.out.println(invisible.getPosX()+","+invisible.getPosY());
 			break;
+		case 5:
+			
+			fill(225,0,0);
+			textFont(scoreBoard);
+			textSize(32);
+			text("Game Over",400,300);
+			textSize(15);
+			text("Losers will not be added to leaderboards",400,325);
+			if((millis()/1000)%2==0) {
+				
+				text("Click anywhere to continue",400,350);	
+			}	
+			break;
+		case 6:
+			image(leaderBoardScreen1,0,0,800,600);
+
+			if (mouseX > 275 && mouseX <525 && mouseY > 480 && mouseY < 540) {
+				image(leaderBoardScreen2,0,0,800,600);
+			}
+			break;
+			
+			
+		
 
 		}
 		fill(0);
@@ -317,6 +349,9 @@ public class Main extends PApplet{
 				screen=2;
 			}
 			break;
+		case 5:
+			screen=6;
+			break;
 
 		}
 	}
@@ -345,7 +380,7 @@ public class Main extends PApplet{
 				if(map[rows][columns] == 0) {
 					/*noFill();
 					stroke(0);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	*/
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/
 				}
 				if(map[rows][columns] == 1) {
 					/*fill(0);
@@ -355,12 +390,12 @@ public class Main extends PApplet{
 				if(map[rows][columns] == 2) {
 					/*fill(0);
 					noStroke();
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	*/
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/
 				}  
 				if(map[rows][columns] == 3) {
 					/*fill(0,255,0);
 					stroke(255);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);	*/
+					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/
 				}  
 				if(map[rows][columns] == 4) {
 					fill(0,0,255);
@@ -537,6 +572,7 @@ public class Main extends PApplet{
 	}
 	
 	public void activatePower(Lebron lbj, PowerUp power) {
+
 		if(power.isUsed()==false) {
 			if(power instanceof Invisibility) {
 				if (dist(lbj.getPosX(), lbj.getPosY(), power.getPosX(), power.getPosY()) < 40) {
@@ -557,5 +593,13 @@ public class Main extends PApplet{
 			
 		}
 		
+	}
+	
+	public boolean gameOver(Lebron lbj) {
+		boolean lose=false;
+		if(lbj.getHealth()==0) {
+			lose= true;
+		}
+		return lose;
 	}
 }
