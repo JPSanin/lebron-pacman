@@ -224,15 +224,14 @@ public class Main extends PApplet{
 				screen=5;
 			}
 			if(win()) {
-				System.out.println("yes");
-				System.out.println("Time: "+players.get(playerNumber-1).getName());
-				System.out.println("Time: "+players.get(playerNumber-1).getTime());
-				System.out.println("Score: "+players.get(playerNumber-1).getScore());
+				order();
 				screen=6;
 			}
 			int realTime=gameTime-holdTime;
 			
 			players.get(playerNumber-1).calculateTime(realTime);
+			players.get(playerNumber-1).setRegularTime(realTime);
+			System.out.println(players.get(playerNumber-1).getRegularTime());
 			noTint();
 			image(mapScreen,0,0,800,600);
 			drawHealth(lbj.getHealth());
@@ -678,6 +677,25 @@ public class Main extends PApplet{
 	
 		
 		return win;
+	}
+	
+	public void order() {
+		
+		 for(int i=players.size()-1;i >0; i--){
+		      for(int j=0; j<i; j++){
+		    	 if(players.get(j+1).getScore()==players.get(j).getScore()){
+		    		 if(players.get(j).getRegularTime()>players.get(j+1).getRegularTime()){
+				          Player p=players.get(j+1);
+				          players.set(j+1,players.get(j));
+				          players.set(j,p);
+				        }
+		    	 }else if(players.get(j+1).getScore()>players.get(j).getScore()){
+		          Player p=players.get(j+1);
+		          players.set(j+1,players.get(j));
+		          players.set(j,p);
+		        }
+		      }
+		    }
 	}
 	
 	public void reset() {

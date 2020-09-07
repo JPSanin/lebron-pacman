@@ -3,6 +3,7 @@ package src;
 public class Player {
 	private String name;
 	private int score;
+	private int regularTime;
 	private String time;
 	
 	public Player(String name) {
@@ -50,6 +51,14 @@ public class Player {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+	
+	public int getRegularTime() {
+		return regularTime;
+	}
+
+	public void setRegularTime(int regularTime) {
+		this.regularTime = regularTime;
 	}
 
 }
