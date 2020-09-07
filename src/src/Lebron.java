@@ -36,6 +36,17 @@ public class Lebron {
 		status=NORMAL;
 		
 	}
+	/** Method for drawing lebron in the different ways required<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron is drawn correctly<br>
+	@param lbjLeft, left facing image of lebron
+	@param lbjRight, right facing image of lebron
+	@param lbjUp, up facing image of lebron
+	@param lbjDown, down facing image of lebron
+	@param lbjFrozen, frozen image of lebron
+	@param movement, integer representing where lebron is moving
+	*/
 	
 	public void draw(PImage lbjLeft,PImage lbjRight,PImage lbjDown,PImage lbjUp, PImage lbjFrozen, int movement) {
 		if(status==FROZEN) {
@@ -79,6 +90,13 @@ public class Lebron {
 		
 	}
 	
+/** Method for moving lebron <br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron moves<br>
+	@param dir, integer representing the direction lebron is moving to
+	
+	*/
 	public void move(int dir) {
 		if(status!=FROZEN) {
 			switch(dir) {
@@ -99,11 +117,24 @@ public class Lebron {
 			
 		
 	}
+	
+	/** Method for teleporting lebron  <br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron teleports<br>
+	
+	*/
 	public void teleportLeft() {
 		matX=19;
 		posX=760;
 	}
 	
+	/** Method for teleporting lebron  <br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron teleports<br>
+	
+	*/
 	public void teleportRight() {
 		matX=0;
 		posX=0;

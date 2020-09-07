@@ -7,6 +7,9 @@ import processing.core.PFont;
 import processing.core.PImage;
 
 public class Main extends PApplet{
+	
+	//Variable declaration
+	
 	private PImage[] homescreens;
 	private PImage[] namescreens;
 	private PImage bigBall;
@@ -60,6 +63,8 @@ public class Main extends PApplet{
 	}
 
 	public void setup() {
+		//Variable initialization
+		
 		ellipseMode(CORNER);
 		textAlign(CENTER);
 		map = new int[][]{ 
@@ -162,7 +167,6 @@ public class Main extends PApplet{
 		hitCovid=false;
 		hitFreeze=false;
 		
-		//No reset
 		playerNumber=0;
 		players= new ArrayList<Player>();
 		
@@ -231,7 +235,6 @@ public class Main extends PApplet{
 			
 			players.get(playerNumber-1).calculateTime(realTime);
 			players.get(playerNumber-1).setRegularTime(realTime);
-			System.out.println(players.get(playerNumber-1).getRegularTime());
 			noTint();
 			image(mapScreen,0,0,800,600);
 			drawHealth(lbj.getHealth());
@@ -313,7 +316,7 @@ public class Main extends PApplet{
 			textSize(32);
 			text(players.get(playerNumber-1).getTime(),460,55);
 			text( players.get(playerNumber-1).getScore(),700, 55);
-			//System.out.println(invisible.getPosX()+","+invisible.getPosY());
+			
 			break;
 		case 5:
 			
@@ -363,9 +366,6 @@ public class Main extends PApplet{
 		
 
 		}
-		fill(255);
-		textSize(12);
-		text("" + mouseX + "," + mouseY, mouseX, mouseY);
 
 	}
 
@@ -434,29 +434,15 @@ public class Main extends PApplet{
 		}
 	}
 
+	/** Method for drawing the matrix of basketballs  <br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> basketballs are drawn<br>
+	
+	*/
 	public void paintMatrix() {
 		for (int columns = 0; columns < 20; columns++) {
 			for (int rows = 0; rows < 15; rows++) {
-				if(map[rows][columns] == 0) {
-					/*noFill();
-					stroke(0);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/
-				}
-				if(map[rows][columns] == 1) {
-					/*fill(0);
-					stroke(255);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/	
-				}
-				if(map[rows][columns] == 2) {
-					/*fill(0);
-					noStroke();
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/
-				}  
-				if(map[rows][columns] == 3) {
-					/*fill(0,255,0);
-					stroke(255);
-					rect(0+ (columns * squareSize), 0 + (rows * squareSize), squareSize, squareSize);*/
-				}  
 				if(map[rows][columns] == 4) {
 					fill(0,0,255);
 					stroke(255);
@@ -471,6 +457,13 @@ public class Main extends PApplet{
 			}
 		}
 	}
+	
+	/** Method for typing player name on screen  <br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Player name is drawn and saved<br>
+	
+	*/
 	public void typeName() {
 		if(key==BACKSPACE) {
 			if (name != null && name.length() > 0 ) {
@@ -484,6 +477,13 @@ public class Main extends PApplet{
 		}
 	}
 	
+	
+	/** Method for moving up and scoring<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron moves up and scores if needed<br>
+	
+	*/
 	public void moveUp() {
 		if (key == CODED) {
 			if (keyCode == UP) {
@@ -504,6 +504,13 @@ public class Main extends PApplet{
 			}
 		}
 	}
+	
+	/** Method for moving down and scoring<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron moves down and scores if needed<br>
+	
+	*/
 	public void moveDown() {
 		if (key == CODED) {
 			if (keyCode == DOWN) {
@@ -524,6 +531,13 @@ public class Main extends PApplet{
 			}
 		}
 	}
+	
+	/** Method for moving left and scoring<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron moves left and scores if needed<br>
+	
+	*/
 	public void moveLeft() {
 		if (key == CODED) {
 			if (keyCode == LEFT) {
@@ -548,6 +562,13 @@ public class Main extends PApplet{
 				}
 			}
 		}}
+	
+	/** Method for moving right and scoring<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron moves right and scores if needed<br>
+	
+	*/
 	public void moveRight() {
 		if (key == CODED) {
 			if (keyCode == RIGHT) {
@@ -593,6 +614,14 @@ public class Main extends PApplet{
 
 	}
 
+	
+	/** Method for validating hits between lebron and enemies<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron reacts to being hit if hit by an enemy<br>
+	@param lbj, Lebron object that has been initialized
+	@param bed, enemy object that has been initialized
+	*/
 	public void validateHit(Lebron lbj, Enemy bad) {
 		if(lbj.getStatus()!=3) {
 		if(bad instanceof Referee) {
@@ -631,6 +660,14 @@ public class Main extends PApplet{
 		}
 	}
 	
+	
+	/** Method for activating power ups<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Lebron activates powerup if it can be used<br>
+	@param lbj, Lebron object that has been initialized
+	@param power, PowerUp object that has been initialized
+	*/
 	public void activatePower(Lebron lbj, PowerUp power) {
 
 		if(power.isUsed()==false) {
@@ -655,6 +692,14 @@ public class Main extends PApplet{
 		
 	}
 	
+	
+	/** Method for validating if the player has lost yet<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> returns a boolean that indicates if the player lost<br>
+	@param lbj, Lebron object that has been initialized
+	@return lose, boolean indicating if the player has lost
+	*/
 	public boolean gameOver(Lebron lbj) {
 		boolean lose=false;
 		if(lbj.getHealth()==0) {
@@ -663,6 +708,12 @@ public class Main extends PApplet{
 		return lose;
 	}
 	
+	/** Method for validating if the player has won yet<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> returns a boolean that indicates if the player won<br>
+	@return win, boolean indicating if the player has won
+	*/
 	public boolean win() {
 		boolean win=true;
 		
@@ -679,6 +730,11 @@ public class Main extends PApplet{
 		return win;
 	}
 	
+	/** Method for ordering the leaderboard<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Organizes the leaderboard <br>
+	*/
 	public void order() {
 		
 		 for(int i=players.size()-1;i >0; i--){
@@ -698,6 +754,11 @@ public class Main extends PApplet{
 		    }
 	}
 	
+	/** Method for reseting the game<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Resets the game to initial state<br>
+	*/
 	public void reset() {
 		map = new int[][]{ 
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},

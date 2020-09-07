@@ -13,6 +13,11 @@ public class Player {
 		
 	}
 	
+	/** Method for converting time to a visible string<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Time string is created and saved<br>
+	*/
 	public void calculateTime(int time) {
 		String s="";
 		int printTime= (int)time/60;

@@ -26,6 +26,12 @@ public abstract class Enemy {
 
 	}
 
+	/** Method for randomized enemy movement<br>
+	
+	<b> pre: </b> <br>
+	<b> post: </b> Enemies move in random manner<br>
+	@param map , a matrix representing where the enemies can move
+	*/
 	public void move(int[][]map) {
 		if(r==0) {
 			randomUp(map);
@@ -91,7 +97,7 @@ public abstract class Enemy {
 		
 	}
 	
-	public void randomLeft(int [][] map) {
+	private void randomLeft(int [][] map) {
 		if (this.matX - 1 > -1 && map[this.matY ][this.matX- 1] == 0) {
 			this.matX -= 1;
 			this.posX -= this.vel;
